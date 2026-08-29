@@ -2,7 +2,19 @@
 
 A minimalist Home Assistant dashboard card that shows how much of the current year has elapsed. Choose a continuous bar, one dot per day, or one dot per week. The card follows Home Assistant theme colors and includes a visual configuration editor.
 
-![Year Progress Card preview](docs/preview.svg)
+## Screenshots
+
+### Continuous bar
+
+![Continuous year progress bar](docs/screenshots/continuous-bar.png)
+
+### Weekly dots
+
+![Year progress shown as weekly dots](docs/screenshots/weekly-dots.png)
+
+### Daily dots
+
+![Year progress shown as daily dots](docs/screenshots/daily-dots.png)
 
 ## Features
 
