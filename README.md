@@ -21,8 +21,6 @@ A minimalist Home Assistant dashboard card that shows how much of the current ye
 4. Find **Year Progress Card** and select **Download**.
 5. Refresh Home Assistant. If HACS does not add the resource automatically, add `/hacsfiles/ha_year-in-progress/ha_year-in-progress.js` as a JavaScript module under **Settings → Dashboards → Resources**.
 
-After the repository is accepted into the default HACS catalog, users can skip step 3.
-
 ## Manual install
 
 Copy `dist/ha_year-in-progress.js` to `/config/www/ha_year-in-progress.js`, then add this dashboard resource:
