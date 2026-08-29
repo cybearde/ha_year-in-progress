@@ -84,10 +84,6 @@ dot_gap: 7
 | `padding` | number | `20` | Card padding in pixels |
 | `border_radius` | number | `12` | Card corner radius in pixels |
 
-## Releases
-
-Maintainers: update `CARD_VERSION` in `dist/ha_year-in-progress.js`, commit the change, then push a semantic-version tag such as `v1.0.0`. The release workflow creates a GitHub Release and attaches `ha_year-in-progress.js`. HACS uses full GitHub releases—not tags alone—for versioned downloads.
-
 ## Support and contributing
 
 Please use GitHub Issues for bugs and feature requests. Pull requests are welcome. By participating, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
