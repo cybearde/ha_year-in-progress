@@ -15,7 +15,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Prepare release asset
         run: cp dist/ha_year-in-progress.js ha_year-in-progress.js
-      - name: Create GitHub release
+      - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" ha_year-in-progress.js --generate-notes --verify-tag
+        run: |
+          gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 || gh release create "${GITHUB_REF_NAME}" --generate-notes --verify-tag
+          gh release upload "${GITHUB_REF_NAME}" ha_year-in-progress.js --clobber
