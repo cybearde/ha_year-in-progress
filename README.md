@@ -4,6 +4,8 @@ A minimalist Home Assistant dashboard card that shows how much of the current ye
 
 ## Screenshots
 
+These screenshots were captured using the `ios-dark-mode` theme.
+
 ### Continuous bar
 
 ![Continuous year progress bar](docs/screenshots/continuous-bar.png)
