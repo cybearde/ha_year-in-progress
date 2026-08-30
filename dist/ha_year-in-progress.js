@@ -1,10 +1,11 @@
-const CARD_VERSION = "1.0.0";
+const CARD_VERSION = "1.1.0";
 
 const DEFAULTS = {
   mode: "bar",
   title: "YEAR PROGRESS",
   show_title: true,
   show_percentage: true,
+  decimal_places: 1,
   show_day_count: false,
   show_remaining: false,
   bar_height: 8,
@@ -48,7 +49,12 @@ class YearProgressCard extends HTMLElement {
     if (!["bar", "days", "weeks"].includes(mode)) {
       throw new Error("mode must be bar, days, or weeks");
     }
-    this.config = { ...DEFAULTS, ...config, mode };
+    this.config = {
+      ...DEFAULTS,
+      ...config,
+      mode,
+      decimal_places: Math.round(clamp(config.decimal_places ?? DEFAULTS.decimal_places, 0, 8)),
+    };
     this.render();
     this.scheduleRefresh();
   }
@@ -68,11 +74,17 @@ class YearProgressCard extends HTMLElement {
   scheduleRefresh() {
     clearTimeout(this._refreshTimer);
     const now = new Date();
-    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 1);
+    const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 1);
+    const updatesProgress = this.config.show_percentage || this.config.mode === "bar";
+    const yearMs = new Date(now.getFullYear() + 1, 0, 1) - new Date(now.getFullYear(), 0, 1);
+    const displayStepMs = yearMs / (100 * (10 ** this.config.decimal_places));
+    const refreshMs = updatesProgress
+      ? Math.min(nextMidnight - now, Math.max(1000, displayStepMs))
+      : nextMidnight - now;
     this._refreshTimer = setTimeout(() => {
       this.render();
       this.scheduleRefresh();
-    }, next - now);
+    }, refreshMs);
   }
 
   renderDots(data) {
@@ -88,7 +100,7 @@ class YearProgressCard extends HTMLElement {
       count = Math.ceil((data.days + offset) / 7);
       current = Math.floor((data.day - 1 + offset) / 7);
     }
-    return `<div class="dots" role="img" aria-label="${data.progress.toFixed(1)} percent of ${data.year} elapsed">${Array.from(
+    return `<div class="dots" role="img" aria-label="${data.progress.toFixed(config.decimal_places)} percent of ${data.year} elapsed">${Array.from(
       { length: count },
       (_, index) => `<span class="dot ${index < current ? "past" : index === current ? "current" : "future"}"></span>`,
     ).join("")}</div>`;
@@ -100,7 +112,7 @@ class YearProgressCard extends HTMLElement {
     const data = yearData();
     const title = String(config.title || DEFAULTS.title).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     const visual = config.mode === "bar"
-      ? `<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${data.progress.toFixed(1)}"><span style="width:${data.progress}%"></span></div>`
+      ? `<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${data.progress.toFixed(config.decimal_places)}"><span style="width:${data.progress}%"></span></div>`
       : this.renderDots(data);
     const hasFooter = config.show_day_count || config.show_remaining;
     this.shadowRoot.innerHTML = `
@@ -128,7 +140,7 @@ class YearProgressCard extends HTMLElement {
         .footer { margin-top:14px; color:var(--secondary-text-color); font-size:11px; text-transform:uppercase; }
       </style>
       <ha-card>
-        ${(config.show_title || config.show_percentage) ? `<div class="header">${config.show_title ? `<div class="title">${title}</div>` : ""}${config.show_percentage ? `<div class="percentage">${data.progress.toFixed(1)}%</div>` : ""}</div>` : ""}
+        ${(config.show_title || config.show_percentage) ? `<div class="header">${config.show_title ? `<div class="title">${title}</div>` : ""}${config.show_percentage ? `<div class="percentage">${data.progress.toFixed(config.decimal_places)}%</div>` : ""}</div>` : ""}
         ${visual}
         ${hasFooter ? `<div class="footer">${config.show_day_count ? `<span>Day ${data.day} / ${data.days}</span>` : ""}${config.show_remaining ? `<span>${data.remaining} days left</span>` : ""}</div>` : ""}
       </ha-card>`;
@@ -181,7 +193,9 @@ class YearProgressCardEditor extends HTMLElement {
         ${this.field("Show title", "show_title", "switch")}
         ${this.config.show_title ? this.field("Title", "title") : ""}
         ${this.field("Show percentage", "show_percentage", "switch")}
-        ${this.field("Show day count", "show_day_count", "switch")}
+                ${this.config.show_percentage ? this.field(this.config.decimal_places === 8 ? "Decimal places (Insane mode)" : "Decimal places", "decimal_places", "range", 0, 8) : ""}
+                ${this.config.show_percentage && this.config.decimal_places >= 6 ? `<small>High precision refreshes once per second.</small>` : ""}
+                ${this.field("Show day count", "show_day_count", "switch")}
         ${this.field("Show days remaining", "show_remaining", "switch")}
         ${mode === "bar" ? this.field("Bar height", "bar_height", "range", 2, 40) : ""}
         ${mode !== "bar" ? this.field("Dot size", "dot_size", "range", 3, 24) + this.field("Dot spacing", "dot_gap", "range", 0, 20) : ""}

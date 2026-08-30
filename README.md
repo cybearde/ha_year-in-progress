@@ -21,7 +21,8 @@ These screenshots were captured using the `ios-dark-mode` theme.
 ## Features
 
 - Continuous progress bar, daily dots, or weekly dots
-- Percentage, day count, and days-remaining labels
+- Configurable percentage precision from 0–8 decimals, including once-per-second Insane mode
+- Day count and days-remaining labels
 - Monday or Sunday week start
 - Adjustable bar height, dot size, spacing, padding, and corner radius
 - Leap-year support and automatic refresh after midnight
@@ -87,6 +88,7 @@ dot_gap: 7
 | `title` | string | `YEAR PROGRESS` | Card heading |
 | `show_title` | boolean | `true` | Show the heading |
 | `show_percentage` | boolean | `true` | Show elapsed percentage |
+| `decimal_places` | number | `1` | Percentage precision from `0` to `8`; values `6`–`8` refresh every second and `8` is Insane mode |
 | `show_day_count` | boolean | `false` | Show current day and total days |
 | `show_remaining` | boolean | `false` | Show days remaining |
 | `bar_height` | number | `8` | Bar height in pixels |
