@@ -12,7 +12,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Prepare release asset
         run: cp dist/ha_year-in-progress.js ha_year-in-progress.js
       - name: Create or update GitHub release
