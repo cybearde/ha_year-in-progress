@@ -30,11 +30,12 @@ These screenshots were captured using the `ios-dark-mode` theme.
 
 ## Install with HACS
 
-1. In HACS, open **Dashboard**.
-2. Open the menu and choose **Custom repositories**.
-3. Enter `https://github.com/cybearde/ha_year-in-progress`, choose **Dashboard** as the category, and add it.
-4. Find **Year Progress Card** and select **Download**.
-5. Refresh Home Assistant. If HACS does not add the resource automatically, add `/hacsfiles/ha_year-in-progress/ha_year-in-progress.js` as a JavaScript module under **Settings → Dashboards → Resources**.
+1. Open **HACS** in Home Assistant and select **Dashboard**.
+2. Search for **Year Progress Card**.
+3. Open the result and select **Download**.
+4. Refresh Home Assistant.
+
+HACS normally registers the dashboard resource automatically. If the card does not appear, verify that `/hacsfiles/ha_year-in-progress/ha_year-in-progress.js` is configured as a JavaScript module under **Settings → Dashboards → Resources**.
 
 ## Manual install
 
